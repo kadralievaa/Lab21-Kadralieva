@@ -1,71 +1,117 @@
 ﻿using System.Collections.Generic;
 
-// 2. Список и массив
+//1
+Console.Write("Сколько задач добавить сначала: ");
+int count = Convert.ToInt32(Console.ReadLine());
+
 List<string> tasks = new List<string>();
-Console.WriteLine(tasks.Count); // Выведет 0
 
-tasks = new List<string> { "Код", "Тест", "Код" };
+for (int i = 0; i < count; i++)
+{
+    Console.Write($"Задача {i + 1}: ");
+    string title = Console.ReadLine() ?? "";
+    tasks.Add(title);
+}
 
-// 3
-tasks.Add("Отчёт");
-tasks.Insert(1, "План");
-
-// 4
-Console.WriteLine(tasks[0]);
-Console.WriteLine(tasks[tasks.Count - 1]);
-
-List<string> editableTasks = new List<string> { "Черновик" };
-editableTasks[0] = "Готово";
-Console.WriteLine(editableTasks[0]);
-Console.WriteLine(editableTasks.Count);
-
-Console.WriteLine("\nВывод через метод:");
+Console.WriteLine("\nИсходный список:");
 PrintTasks(tasks);
 
-void PrintTasks(List<string> tasks)
+//2
+Console.Write("\nВведите новую задачу для добавления: ");
+string newTask = Console.ReadLine() ?? "";
+tasks.Add(newTask);
+Console.WriteLine("Задача добавлена");
+
+//3
+Console.Write("Введите задачу для вставки: ");
+string insertTask = Console.ReadLine() ?? "";
+Console.Write("Введите индекс для вставки: ");
+int insertIndex = Convert.ToInt32(Console.ReadLine());
+
+if (InsertTaskSafe(tasks, insertIndex, insertTask))
 {
-    if (tasks.Count == 0)
+    Console.WriteLine("Задача вставлена");
+}
+else
+{
+    Console.WriteLine("Недопустимый индекс вставки");
+}
+
+//4
+Console.Write("\nВведите название задачи для удаления: ");
+string removeName = Console.ReadLine() ?? "";
+if (tasks.Remove(removeName))
+{
+    Console.WriteLine("Первое совпадение удалено");
+}
+else
+{
+    Console.WriteLine("Задача не найдена");
+}
+
+//5
+Console.Write("Введите индекс задачи для удаления: ");
+int removeIndex = Convert.ToInt32(Console.ReadLine());
+if (RemoveTaskAtSafe(tasks, removeIndex))
+{
+    Console.WriteLine("Задача по индексу удалена");
+}
+else
+{
+    Console.WriteLine("Недопустимый индекс удаления");
+}
+
+//6
+Console.Write("\nВведите название задачи для поиска: ");
+string searchName = Console.ReadLine() ?? "";
+int foundIndex = tasks.IndexOf(searchName);
+
+if (foundIndex != -1)
+{
+    Console.WriteLine($"Первый индекс: {foundIndex}");
+}
+else
+{
+    Console.WriteLine("Задача не найдена");
+}
+
+//7
+Console.WriteLine("\n>>> Итоговый список дел <<<");
+Console.WriteLine($"\nКоличество задач: {tasks.Count}");
+PrintTasks(tasks);
+
+
+//методы
+void PrintTasks(List<string> list)
+{
+    if (list.Count == 0)
     {
         Console.WriteLine("Список пуст");
         return;
     }
 
-    for (int i = 0; i < tasks.Count; i++)
+    for (int i = 0; i < list.Count; i++)
     {
-        Console.WriteLine($"{i}: {tasks[i]}");
+        Console.WriteLine($"{i}: {list[i]}");
     }
 }
 
-// 5. Удаление
-List<string> removedTasks = new List<string> { "Код", "Тест", "Код" };
-
-bool removed = removedTasks.Remove("Код");
-Console.WriteLine(removed);
-PrintTasks(removedTasks);
-
-Console.WriteLine(removedTasks.Remove("Экзамен"));
-Console.WriteLine(removedTasks.Count);
-
-removedTasks.RemoveAt(1);
-PrintTasks(removedTasks);
-
-bool RemoveTaskAtSafe(List<string> tasks, int index)
+bool InsertTaskSafe(List<string> list, int index, string title)
 {
-    if (index < 0 || index >= tasks.Count)
+    if (index < 0 || index > list.Count)
     {
         return false;
     }
-    tasks.RemoveAt(index);
+    list.Insert(index, title);
     return true;
 }
 
-bool InsertTaskSafe(List<string> tasks, int index, string title)
+bool RemoveTaskAtSafe(List<string> list, int index)
 {
-    if (index < 0 || index > tasks.Count)
+    if (index < 0 || index >= list.Count)
     {
         return false;
     }
-
-    tasks.Insert(index, title);
+    list.RemoveAt(index);
     return true;
 }
